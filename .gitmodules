@@ -1,0 +1,3 @@
+[submodule "luadist"]
+	path = luadist
+	url = git@github.com:LuaDist/lua.git
