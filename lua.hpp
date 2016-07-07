@@ -21,9 +21,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#ifndef LUA_HPP
+#define LUA_HPP
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include "luadist/src/lua.h"
 #include "luadist/src/lualib.h"
 #include "luadist/src/lauxlib.h"
+#ifdef __cplusplus
 }
+#endif
+
+void *mx2lua_pushuserdata(lua_State *L, void *ud, int size) {
+  void *ptr = lua_newuserdata(L, (size_t)size);
+  memcpy(ptr, ud, (size_t)size);
+  return ptr;
+}
+
+#endif
