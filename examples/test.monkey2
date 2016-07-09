@@ -31,37 +31,41 @@ Using libc..
 Using lua..
 
 Function Main:Void()
-  Local L:lua_State Ptr = luaL_newstate()
-  luaL_openlibs(L)
-  lua_register(L, "PrintFoo", PrintFoo)
-  lua_register(L, "PrintBar", PrintBar)
+  Local state := LuaState.NewState()
+  state.Register("PrintFoo", PrintFoo)
+  state.Register("PrintBar", PrintBar)
 
-  lua_getglobal(L, "PrintFoo")
+  Print "Main: Testing passing a struct, value should not be changed."
   Local foo := New Foo("Hello")
-  mx2lua_pushuserdata(L, VarPtr foo, sizeof(foo))
-  lua_pcall(L, 1, 0, 0)
-  Print foo.a ' should not have changed, since it's a struct
+  state.GetGlobal("PrintFoo")
+  state.PushUserdata(VarPtr foo, sizeof(foo))
+  Print "Main: foo.a before call: "+foo.a
+  state.PCall(1, 0, 0)
+  Print "Main: foo.a after call: "+foo.a
 
-  lua_getglobal(L, "PrintBar")
+  Print "Main: Testing passing an object, value should be changed."
   Local bar := New Bar("World")
-  mx2lua_pushuserdata(L, Cast<Void Ptr Ptr>(Varptr bar), sizeof(Varptr bar))
-  lua_pcall(L, 1, 0, 0)
-  Print bar.b ' should have changed, since it's an object
-
-  lua_close(L)
+  state.GetGlobal("PrintBar")
+  state.PushUserdata(Cast<Void Ptr Ptr>(Varptr bar), sizeof(Varptr bar))
+  Print "Main: bar.b before call: "+bar.b
+  state.PCall(1, 0, 0)
+  Print "Main: bar.b after call: "+bar.b
+  
+  state.Close()
 End
 
-
 Function PrintFoo:Int(L:lua_State Ptr)
-  Local fooptr := Cast<Foo Ptr>(lua_touserdata(L, 1))
-  Print fooptr[0].a
+  Local state := New LuaState(L)
+  Local fooptr := Cast<Foo Ptr>(state.ToUserdata(1))
+  Print "PrintFoo: a = "+fooptr[0].a
   fooptr[0].a = "Changed Foo!"
   Return 0
 End
 
 Function PrintBar:Int(L:lua_State Ptr)
-  Local barptr := Cast<Bar Ptr>(lua_touserdata(L, 1))
-  Print barptr[0].b
+  Local state := New LuaState(L)
+  Local barptr := Cast<Bar Ptr>(state.ToUserdata(1))
+  Print "PrintBar: b = "+barptr[0].b
   barptr[0].b = "Changed Bar!"
   Return 0
 End
@@ -79,3 +83,4 @@ Class Bar
     Self.b = b
   End
 End
+#End
