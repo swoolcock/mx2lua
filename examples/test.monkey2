@@ -50,7 +50,7 @@ Function Main:Void()
   Print "Main: bar.b before call: "+bar.b
   state.PCall(1, 0, 0)
   Print "Main: bar.b after call: "+bar.b
-  
+
   state.Close()
 End
 
@@ -83,4 +83,3 @@ Class Bar
     Self.b = b
   End
 End
-#End
