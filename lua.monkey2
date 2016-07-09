@@ -108,9 +108,9 @@ Function lua_dump:Int(L:lua_State Ptr, writer:lua_Writer, data:Void Ptr, strip:I
 Function lua_error:Int(L:lua_State Ptr)
 Function lua_gc:Int(L:lua_State Ptr, what:Int, data:Int)
 Function lua_getallocf:lua_Alloc(L:lua_State Ptr, ud:Void Ptr Ptr)
-Function lua_getfield:Int(L:lua_State Ptr, index:Int, k:Utf8String)
+Function lua_getfield:Int(L:lua_State Ptr, index:Int, k:String) = "mx2lua_getfield"
 Function lua_getextraspace:Void Ptr(L:lua_State Ptr)
-Function lua_getglobal:Int(L:lua_State Ptr, name:Utf8String)
+Function lua_getglobal:Int(L:lua_State Ptr, name:String) = "mx2lua_getglobal"
 Function lua_geti:Int(L:lua_State Ptr, index:Int, i:Int) = "mx2lua_geti"
 Function lua_getmetatable:Bool(L:lua_State Ptr, index:Int) = "mx2lua_getmetatable"
 Function lua_gettable:Int(L:lua_State Ptr, index:Int)
@@ -132,7 +132,7 @@ Function lua_isthread:Bool(L:lua_State Ptr, index:Int) = "mx2lua_isthread"
 Function lua_isuserdata:Bool(L:lua_State Ptr, index:Int) = "mx2lua_isuserdata"
 Function lua_isyieldable:Bool(L:lua_State Ptr) = "mx2lua_isyieldable"
 Function lua_len:Void(L:lua_State Ptr, index:Int)
-Function lua_load:Int(L:lua_State Ptr, reader:lua_Reader, data:Void Ptr, chunkname:Utf8String, mode:Utf8String)
+'Function lua_load:Int(L:lua_State Ptr, reader:lua_Reader, data:Void Ptr, chunkname:Utf8String, mode:Utf8String)
 Function lua_newstate:lua_State Ptr(f:lua_Alloc, ud:Void Ptr)
 Function lua_newtable:Void(L:lua_State Ptr)
 Function lua_newthread:lua_State Ptr(L:lua_State Ptr)
@@ -149,11 +149,10 @@ Function lua_pushcfunction:Void(L:lua_State Ptr, f:lua_CFunction)
 Function lua_pushglobaltable:Void(L:lua_State Ptr)
 Function lua_pushinteger:Void(L:lua_State Ptr, n:Int) = "mx2lua_pushinteger"
 Function lua_pushlightuserdata:Void(L:lua_State Ptr, p:Void Ptr)
-Function lua_pushliteral:Utf8String(L:lua_State Ptr, s:Utf8String)
-Function lua_pushlstring:Utf8String(L:lua_State Ptr, s:Utf8String, len:Int) = "mx2lua_pushlstring"
+Function lua_pushlstring:String(L:lua_State Ptr, s:String, len:Int) = "mx2lua_pushlstring"
 Function lua_pushnil:Void(L:lua_State Ptr)
 Function lua_pushnumber:Void(L:lua_State Ptr, n:Float) = "mx2lua_pushnumber"
-Function lua_pushstring:Utf8String(L:lua_State Ptr, s:Utf8String)
+Function lua_pushstring:String(L:lua_State Ptr, s:String) = "mx2lua_pushstring"
 Function lua_pushthread:Int(L:lua_State Ptr)
 Function lua_pushvalue:Void(L:lua_State Ptr, index:Int)
 'va_list lua_pushvfstring
@@ -165,112 +164,112 @@ Function lua_rawlen:Int(L:lua_State Ptr, index:Int) = "mx2lua_rawlen"
 Function lua_rawset:Void(L:lua_State Ptr, index:Int)
 Function lua_rawseti:Void(L:lua_State Ptr, index:Int, i:Int) = "mx2lua_rawseti"
 Function lua_rawsetp:Void(L:lua_State Ptr, index:Int, p:Void Ptr)
-Function lua_register:Void(L:lua_State Ptr, name:Utf8String, f:lua_CFunction)
+Function lua_register:Void(L:lua_State Ptr, name:String, f:lua_CFunction) = "mx2lua_register"
 Function lua_remove:Void(L:lua_State Ptr, index:Int)
 Function lua_replace:Void(L:lua_State Ptr, index:Int)
 Function lua_resume:Int(L:lua_State Ptr, from:lua_State Ptr, nargs:Int)
 Function lua_rotate:Void(L:lua_State Ptr, idx:Int, n:Int)
 Function lua_setallocf:Void(L:lua_State Ptr, f:lua_Alloc, ud:Void Ptr)
-Function lua_setfield:Void(L:lua_State Ptr, index:Int, k:Utf8String)
-Function lua_setglobal:Void(L:lua_State Ptr, name:Utf8String)
+Function lua_setfield:Void(L:lua_State Ptr, index:Int, k:String) = "mx2lua_setfield"
+Function lua_setglobal:Void(L:lua_State Ptr, name:String) = "mx2lua_setglobal"
 Function lua_seti:Void(L:lua_State Ptr, index:Int, n:Int) = "mx2lua_seti"
 Function lua_setmetatable:Void(L:lua_State Ptr, index:Int)
 Function lua_settable:Void(L:lua_State Ptr, index:Int)
 Function lua_settop:Void(L:lua_State Ptr, index:Int)
 Function lua_setuservalue:Void(L:lua_State Ptr, index:Int)
 Function lua_status:Void(L:lua_State Ptr)
-Function lua_stringtonumber:Int(L:lua_State Ptr, s:Utf8String) = "mx2lua_stringtonumber"
+Function lua_stringtonumber:Int(L:lua_State Ptr, s:String) = "mx2lua_stringtonumber"
 Function lua_toboolean:Bool(L:lua_State Ptr, index:Int) = "mx2lua_toboolean"
 Function lua_tocfunction:lua_CFunction(L:lua_State Ptr, index:Int)
 Function lua_tointeger:Int(L:lua_State Ptr, index:Int) = "mx2lua_tointeger"
 Function lua_tointegerx:Int(L:lua_State Ptr, index:Int, isnum:Bool Ptr) = "mx2lua_tointegerx"
-Function lua_tolstring:Utf8String(L:lua_State Ptr, index:Int, len:Int Ptr)
+Function lua_tolstring:String(L:lua_State Ptr, index:Int, len:Int Ptr) = "mx2lua_tolstring"
 Function lua_tonumber:Float(L:lua_State Ptr, index:Int) = "mx2lua_tonumber"
 Function lua_tonumberx:Float(L:lua_State Ptr, index:Int, isnum:Bool Ptr) = "mx2lua_tonumberx"
 Function lua_topointer:Void Ptr(L:lua_State Ptr, index:Int)
-Function lua_tostring:Utf8String(L:lua_State Ptr, index:Int)
+Function lua_tostring:String(L:lua_State Ptr, index:Int) = "mx2lua_tostring"
 Function lua_tothread:lua_State Ptr(L:lua_State Ptr, index:Int)
 Function lua_touserdata:Void Ptr(L:lua_State Ptr, index:Int)
 Function lua_type:Int(L:lua_State Ptr, index:Int)
-Function lua_typename:Utf8String(L:lua_State Ptr, tp:Int)
+Function lua_typename:String(L:lua_State Ptr, tp:Int) = "mx2lua_typename"
 Function lua_upvalueindex:Int(i:Int)
-Function lua_version:Float Ptr(L:lua_State Ptr) = "mx2lua_version"
+Function lua_version:Float(L:lua_State Ptr) = "mx2lua_version"
 Function lua_xmove:Void(from:lua_State Ptr, _to:lua_State Ptr, n:Int)
 Function lua_yield:Int(L:lua_State Ptr, nresults:Int)
 Function lua_yieldk:Int(L:lua_State Ptr, nresults:Int, ctx:lua_KContext, k:lua_KFunction)
 
 ' debug interface
-Function lua_gethook:lua_Hook(L:lua_State Ptr)
-Function lua_gethookcount:Int(L:lua_State Ptr)
-Function lua_gethookmask:Int(L:lua_State Ptr)
-Function lua_getinfo:Int(L:lua_State Ptr, what:Utf8String, ar:lua_Debug Ptr)
-Function lua_getlocal:Utf8String(L:lua_State Ptr, ar:lua_Debug Ptr, n:Int)
-Function lua_getstack:Int(L:lua_State Ptr, level:Int, ar:lua_Debug Ptr)
-Function lua_getupvalue:Utf8String(L:lua_State Ptr, funcindex:Int, n:Int)
-Function lua_sethook:Void(L:lua_State Ptr, f:lua_Hook, mask:Int, count:Int)
-Function lua_setlocal:Utf8String(L:lua_State Ptr, ar:lua_Debug Ptr, n:Int)
-Function lua_setupvalue:Utf8String(L:lua_State Ptr, funcindex:Int, n:Int)
-Function lua_upvalueid:Void Ptr(L:lua_State Ptr, funcindex:Int, n:Int)
-Function lua_upvaluejoin:Void(L:lua_State Ptr, funcindex1:Int, n1:Int, funcindex2:Int, n2:Int)
+'Function lua_gethook:lua_Hook(L:lua_State Ptr)
+'Function lua_gethookcount:Int(L:lua_State Ptr)
+'Function lua_gethookmask:Int(L:lua_State Ptr)
+'Function lua_getinfo:Int(L:lua_State Ptr, what:Utf8String, ar:lua_Debug Ptr)
+'Function lua_getlocal:Utf8String(L:lua_State Ptr, ar:lua_Debug Ptr, n:Int)
+'Function lua_getstack:Int(L:lua_State Ptr, level:Int, ar:lua_Debug Ptr)
+'Function lua_getupvalue:Utf8String(L:lua_State Ptr, funcindex:Int, n:Int)
+'Function lua_sethook:Void(L:lua_State Ptr, f:lua_Hook, mask:Int, count:Int)
+'Function lua_setlocal:Utf8String(L:lua_State Ptr, ar:lua_Debug Ptr, n:Int)
+'Function lua_setupvalue:Utf8String(L:lua_State Ptr, funcindex:Int, n:Int)
+'Function lua_upvalueid:Void Ptr(L:lua_State Ptr, funcindex:Int, n:Int)
+'Function lua_upvaluejoin:Void(L:lua_State Ptr, funcindex1:Int, n1:Int, funcindex2:Int, n2:Int)
 
-' auxilliary library
-Function luaL_addchar:Void(B:luaL_Buffer Ptr, c:Int)
-Function luaL_addlstring:Void(B:luaL_Buffer Ptr, s:Utf8String, l:Int)
-Function luaL_addsize:Void(B:luaL_Buffer Ptr, n:Int)
-Function luaL_addstring:Void(B:luaL_Buffer Ptr, s:Utf8String)
-Function luaL_addvalue:Void(B:luaL_Buffer Ptr)
-Function luaL_argcheck:Void(L:lua_State Ptr, cond:Int, arg:Int, extramsg:Utf8String)
-Function luaL_argerror:Void(L:lua_State Ptr, arg:Int, extramsg:Utf8String)
-Function luaL_buffinit:Void(L:lua_State Ptr, B:luaL_Buffer Ptr)
-Function luaL_buffinitsize:Int Ptr(L:lua_State Ptr, B:luaL_Buffer Ptr, sz:Int)
-Function luaL_callmeta:Int(L:lua_State Ptr, obj:Int, e:Utf8String)
+' auxiliary library
+'Function luaL_addchar:Void(B:luaL_Buffer Ptr, c:Int)
+'Function luaL_addlstring:Void(B:luaL_Buffer Ptr, s:Utf8String, l:Int)
+'Function luaL_addsize:Void(B:luaL_Buffer Ptr, n:Int)
+'Function luaL_addstring:Void(B:luaL_Buffer Ptr, s:Utf8String)
+'Function luaL_addvalue:Void(B:luaL_Buffer Ptr)
+Function luaL_argcheck:Void(L:lua_State Ptr, cond:Int, arg:Int, extramsg:String) = "mx2luaL_argcheck"
+Function luaL_argerror:Void(L:lua_State Ptr, arg:Int, extramsg:String) = "mx2luaL_argerror"
+'Function luaL_buffinit:Void(L:lua_State Ptr, B:luaL_Buffer Ptr)
+'Function luaL_buffinitsize:Int Ptr(L:lua_State Ptr, B:luaL_Buffer Ptr, sz:Int)
+Function luaL_callmeta:Int(L:lua_State Ptr, obj:Int, e:String) = "mx2luaL_callmeta"
 Function luaL_checkany:Void(L:lua_State Ptr, arg:Int)
 Function luaL_checkinteger:Int(L:lua_State Ptr, arg:Int) = "mx2luaL_checkinteger"
-Function luaL_checklstring:Utf8String(L:lua_State Ptr, arg:Int, l:Int Ptr) = "mx2luaL_checklstring"
+Function luaL_checklstring:String(L:lua_State Ptr, arg:Int, l:Int Ptr) = "mx2luaL_checklstring"
 Function luaL_checknumber:Float(L:lua_State Ptr, arg:Int) = "mx2luaL_checknumber"
-'Function luaL_checkoption:Int(L:lua_State Ptr, arg:Int, def:Utf8String, lst:Utf8String[]) = "mx2luaL_checkoption"
-Function luaL_checkstack:Void(L:lua_State Ptr, sz:Int, msg:Utf8String)
-Function luaL_checkstring:Utf8String(L:lua_State Ptr, arg:Int)
+Function luaL_checkoption:Int(L:lua_State Ptr, arg:Int, def:String, lst:String[]) = "mx2luaL_checkoption"
+Function luaL_checkstack:Void(L:lua_State Ptr, sz:Int, msg:String) = "mx2luaL_checkstack"
+Function luaL_checkstring:String(L:lua_State Ptr, arg:Int) = "mx2luaL_checkstring"
 Function luaL_checktype:Void(L:lua_State Ptr, arg:Int, t:Int)
-Function luaL_checkudata:Void Ptr(L:lua_State Ptr, arg:Int, tname:Utf8String)
+Function luaL_checkudata:Void Ptr(L:lua_State Ptr, arg:Int, tname:String) = "mx2luaL_checkudata"
 Function luaL_checkversion:Void(L:lua_State Ptr)
-Function luaL_dofile:Bool(L:lua_State Ptr, filename:Utf8String) = "mx2luaL_dofile"
-Function luaL_dostring:Bool(L:lua_State Ptr, str:Utf8String) = "mx2luaL_dostring"
+Function luaL_dofile:Bool(L:lua_State Ptr, filename:String) = "mx2luaL_dofile"
+Function luaL_dostring:Bool(L:lua_State Ptr, str:String) = "mx2luaL_dostring"
 'varargs Function luaL_error:Int(L:lua_State Ptr, )
 Function luaL_execresult:Int(L:lua_State Ptr, stat:Int)
-Function luaL_fileresult:Int(L:lua_State Ptr, stat:Int, filename:Utf8String)
-Function luaL_getmetafield:Int(L:lua_State Ptr, obj:Int, e:Utf8String)
-Function luaL_getmetatable:Int(L:lua_State Ptr, tname:Utf8String)
-Function luaL_getsubtable:Bool(L:lua_State Ptr, idx:Int, fname:Utf8String) = "mx2luaL_getsubtable"
-Function luaL_gsub:Utf8String(L:lua_State Ptr, s:Utf8String, p:Utf8String, r:Utf8String)
+Function luaL_fileresult:Int(L:lua_State Ptr, stat:Int, filename:String) = "mx2luaL_fileresult"
+Function luaL_getmetafield:Int(L:lua_State Ptr, obj:Int, e:String) = "mx2luaL_getmetafield"
+Function luaL_getmetatable:Int(L:lua_State Ptr, tname:String) = "mx2luaL_getmetatable"
+Function luaL_getsubtable:Bool(L:lua_State Ptr, idx:Int, fname:String) = "mx2luaL_getsubtable"
+Function luaL_gsub:String(L:lua_State Ptr, s:String, p:String, r:String) = "mx2luaL_gsub"
 Function luaL_len:Int(L:lua_State Ptr, index:Int) = "mx2luaL_len"
-Function luaL_loadbuffer:Int(L:lua_State Ptr, buff:Utf8String, sz:Int, name:Utf8String)
-Function luaL_loadbufferx:Int(L:lua_State Ptr, buff:Utf8String, sz:Int, name:Utf8String, mode:Utf8String)
-Function luaL_loadfile:Int(L:lua_State Ptr, filename:Utf8String)
-Function luaL_loadfilex:Int(L:lua_State Ptr, filename:Utf8String, mode:Utf8String)
-Function luaL_loadstring:Int(L:lua_State Ptr, s:Utf8String)
+'Function luaL_loadbuffer:Int(L:lua_State Ptr, buff:Utf8String, sz:Int, name:Utf8String)
+'Function luaL_loadbufferx:Int(L:lua_State Ptr, buff:Utf8String, sz:Int, name:Utf8String, mode:Utf8String)
+Function luaL_loadfile:Int(L:lua_State Ptr, filename:String) = "mx2luaL_loadfile"
+Function luaL_loadfilex:Int(L:lua_State Ptr, filename:String, mode:String) = "mx2luaL_loadfilex"
+Function luaL_loadstring:Int(L:lua_State Ptr, s:String) = "mx2luaL_loadstring"
 Function luaL_newlib:Void(L:lua_State Ptr, l:luaL_Reg[])
 Function luaL_newlibtable:Void(L:lua_State Ptr, l:luaL_Reg[])
-Function luaL_newmetatable:Int(L:lua_State Ptr, tname:Utf8String)
+Function luaL_newmetatable:Int(L:lua_State Ptr, tname:String) = "mx2luaL_newmetatable"
 Function luaL_newstate:lua_State Ptr()
 Function luaL_openlibs:Void(L:lua_State Ptr)
 'macro Function luaL_opt
 Function luaL_optinteger:Int(L:lua_State Ptr, arg:Int, d:Int) = "mx2luaL_optinteger"
-Function luaL_optlstring:Utf8String(L:lua_State Ptr, arg:Int, d:Utf8String, l:Int Ptr)
+Function luaL_optlstring:String(L:lua_State Ptr, arg:Int, d:String, l:Int Ptr) = "mx2luaL_optlstring"
 Function luaL_optnumber:Float(L:lua_State Ptr, arg:Int, d:Float) = "mx2luaL_optnumber"
-Function luaL_optstring:Utf8String(L:lua_State Ptr, arg:Int, d:Utf8String)
+Function luaL_optstring:String(L:lua_State Ptr, arg:Int, d:String) = "mx2luaL_optstring"
 Function luaL_prepbuffer:Int Ptr(B:luaL_Buffer Ptr)
 Function luaL_prepbuffsize:Int Ptr(B:luaL_Buffer Ptr, sz:Int)
 Function luaL_pushresult:Void(B:luaL_Buffer Ptr)
 Function luaL_pushresultsize:Void(B:luaL_Buffer Ptr, sz:Int)
 Function luaL_ref:Int(L:lua_State Ptr, t:Int)
-Function luaL_requiref:Void(L:lua_State Ptr, modname:Utf8String, openf:lua_CFunction, glb:Int)
+Function luaL_requiref:Void(L:lua_State Ptr, modname:String, openf:lua_CFunction, glb:Int) = "mx2luaL_requiref"
 Function luaL_setfuncs:Void(L:lua_State Ptr, l:luaL_Reg Ptr, nup:Int)
-Function luaL_setmetatable:Void(L:lua_State Ptr, tname:Utf8String)
-Function luaL_testudata:Void Ptr(L:lua_State Ptr, arg:Int, tname:Utf8String)
-Function luaL_tolstring:Utf8String(L:lua_State Ptr, idx:Int, len:Int Ptr) = "mx2luaL_tolstring"
-Function luaL_traceback:Void(L:lua_State Ptr, L1:lua_State Ptr, msg:Utf8String, level:Int)
-Function luaL_typename:Utf8String(L:lua_State Ptr, index:Int)
+Function luaL_setmetatable:Void(L:lua_State Ptr, tname:String) = "mx2luaL_setmetatable"
+Function luaL_testudata:Void Ptr(L:lua_State Ptr, arg:Int, tname:String) = "mx2luaL_testudata"
+Function luaL_tolstring:String(L:lua_State Ptr, idx:Int, len:Int Ptr) = "mx2luaL_tolstring"
+Function luaL_traceback:Void(L:lua_State Ptr, L1:lua_State Ptr, msg:String, level:Int) = "mx2luaL_traceback"
+Function luaL_typename:String(L:lua_State Ptr, index:Int) = "mx2luaL_typename"
 Function luaL_unref:Void(L:lua_State Ptr, t:Int, ref:Int)
 Function luaL_where:Void(L:lua_State Ptr, lvl:Int)
 
