@@ -1,6 +1,7 @@
 Namespace lua.api
 
 Using lua
+Using libc..
 
 Class LuaState Final
 Private
@@ -581,5 +582,13 @@ Public
 
   Method PushUserdata:Void Ptr(pointer:Void Ptr, sizeInBytes:Int)
     Return mx2lua_pushuserdata(L, pointer, sizeInBytes)
+  End
+
+  Method PushObject<T>:Void(obj:T)
+    PushUserdata(Cast<Void Ptr>(Varptr obj), sizeof(obj))
+  End
+
+  Method ToObject<T>:T(index:Int)
+    Return (Cast<T Ptr>(ToUserdata(index)))[0]
   End
 End

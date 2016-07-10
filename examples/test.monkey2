@@ -32,54 +32,58 @@ Using lua..
 
 Function Main:Void()
   Local state := LuaState.NewState()
-  state.Register("PrintFoo", PrintFoo)
-  state.Register("PrintBar", PrintBar)
+  state.Register("PrintTestStruct", PrintTestStruct)
+  state.Register("PrintTestObject", PrintTestObject)
 
-  Print "Main: Testing passing a struct, value should not be changed."
-  Local foo := New Foo("Hello")
-  state.GetGlobal("PrintFoo")
-  state.PushUserdata(VarPtr foo, sizeof(foo))
-  Print "Main: foo.a before call: "+foo.a
-  state.PCall(1, 0, 0)
-  Print "Main: foo.a after call: "+foo.a
+  Local testStruct := New TestStruct("Hello")
+  Local testObject := New TestObject("World")
+
+  state.PushObject(testStruct)
+  state.SetGlobal("testStruct")
+  state.PushObject(testObject)
+  state.SetGlobal("testObject")
+
+  Print "Main: Testing a struct, value should not be changed."
+  Print "Main: testStruct.foo before call: "+testStruct.foo
+  state.DoString("PrintTestStruct(testStruct)")
+  Print "Main: testStruct.foo after call: "+testStruct.foo
 
   Print "Main: Testing passing an object, value should be changed."
-  Local bar := New Bar("World")
-  state.GetGlobal("PrintBar")
-  state.PushUserdata(Cast<Void Ptr Ptr>(Varptr bar), sizeof(Varptr bar))
-  Print "Main: bar.b before call: "+bar.b
-  state.PCall(1, 0, 0)
-  Print "Main: bar.b after call: "+bar.b
+  Print "Main: testObject.foo before call: "+testObject.foo
+  state.DoString("PrintTestObject(testObject)")
+  Print "Main: testObject.foo after call: "+testObject.foo
 
   state.Close()
 End
 
-Function PrintFoo:Int(L:lua_State Ptr)
+Function PrintTestStruct:Int(L:lua_State Ptr)
   Local state := New LuaState(L)
-  Local fooptr := Cast<Foo Ptr>(state.ToUserdata(1))
-  Print "PrintFoo: a = "+fooptr[0].a
-  fooptr[0].a = "Changed Foo!"
+  Local test := state.ToObject<TestStruct>(1)
+  Print "PrintTestStruct: foo = "+test.foo
+  test.foo = "Changed the struct!"
   Return 0
 End
 
-Function PrintBar:Int(L:lua_State Ptr)
+Function PrintTestObject:Int(L:lua_State Ptr)
   Local state := New LuaState(L)
-  Local barptr := Cast<Bar Ptr>(state.ToUserdata(1))
-  Print "PrintBar: b = "+barptr[0].b
-  barptr[0].b = "Changed Bar!"
+  Local test := state.ToObject<TestObject>(1)
+  Print "PrintTestObject: foo = "+test.foo
+  test.foo = "Changed the object!"
   Return 0
 End
 
-Struct Foo
-  Field a:String
-  Method New(a:String)
-    Self.a = a
+Struct TestStruct
+  Field foo:String
+
+  Method New(foo:String)
+    Self.foo = foo
   End
 End
 
-Class Bar
-  Field b:String
-  Method New(b:String)
-    Self.b = b
+Class TestObject
+  Field foo:String
+
+  Method New(foo:String)
+    Self.foo = foo
   End
 End
