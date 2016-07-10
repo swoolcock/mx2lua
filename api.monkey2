@@ -589,6 +589,8 @@ Public
   End
 
   Method ToObject<T>:T(index:Int)
-    Return (Cast<T Ptr>(ToUserdata(index)))[0]
+    Local p := Cast<T Ptr>(ToUserdata(index))
+    If Not p Then Return Null
+    Return p[0]
   End
 End

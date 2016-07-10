@@ -59,16 +59,24 @@ End
 Function PrintTestStruct:Int(L:lua_State Ptr)
   Local state := New LuaState(L)
   Local test := state.ToObject<TestStruct>(1)
-  Print "PrintTestStruct: foo = "+test.foo
-  test.foo = "Changed the struct!"
+  If test = Null Then
+    Print "PrintTestStruct: It was null!"
+  Else
+    Print "PrintTestStruct: foo = "+test.foo
+    test.foo = "Changed the struct!"
+  End
   Return 0
 End
 
 Function PrintTestObject:Int(L:lua_State Ptr)
   Local state := New LuaState(L)
   Local test := state.ToObject<TestObject>(1)
-  Print "PrintTestObject: foo = "+test.foo
-  test.foo = "Changed the object!"
+  If test = Null Then
+    Print "PrintTestObject: It was null!"
+  Else
+    Print "PrintTestObject: foo = "+test.foo
+    test.foo = "Changed the object!"
+  End
   Return 0
 End
 
