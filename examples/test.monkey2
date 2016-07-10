@@ -26,9 +26,13 @@ Namespace test
 
 #Import "<libc>"
 #Import "<lua>"
+#Import "<std>"
+
+#Import "assets/test.lua"
 
 Using libc..
 Using lua..
+Using std..
 
 Function Main:Void()
   Local state := LuaState.NewState()
@@ -43,14 +47,19 @@ Function Main:Void()
   state.PushObject(testObject)
   state.SetGlobal("testObject")
 
-  Print "Main: Testing a struct, value should not be changed."
-  Print "Main: testStruct.foo before call: "+testStruct.foo
-  state.DoString("PrintTestStruct(testStruct)")
-  Print "Main: testStruct.foo after call: "+testStruct.foo
+  Print "Main: Loading file..."
+  If state.DoString(LoadString("asset::test.lua")) Then
+    Print "Main: Error loading file."
+    Return
+  End
 
-  Print "Main: Testing passing an object, value should be changed."
+  Print "Main: testStruct.foo before call: "+testStruct.foo
   Print "Main: testObject.foo before call: "+testObject.foo
-  state.DoString("PrintTestObject(testObject)")
+
+  Print "Main: Calling 'test()'"
+  state.DoString("test()")
+
+  Print "Main: testStruct.foo after call: "+testStruct.foo
   Print "Main: testObject.foo after call: "+testObject.foo
 
   state.Close()
