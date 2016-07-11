@@ -42,14 +42,14 @@ Function Main:Void()
   Local testStruct := New TestStruct("Hello")
   Local testObject := New TestObject("World")
 
-  state.PushObject(testStruct)
+  state.PushStruct(testStruct)
   state.SetGlobal("testStruct")
   state.PushObject(testObject)
   state.SetGlobal("testObject")
 
   Print "Main: Loading file..."
   If state.DoString(LoadString("asset::test.lua")) Then
-    Print "Main: Error loading file."
+    Print state.ToString(-1)
     Return
   End
 
@@ -57,7 +57,10 @@ Function Main:Void()
   Print "Main: testObject.foo before call: "+testObject.foo
 
   Print "Main: Calling 'test()'"
-  state.DoString("test()")
+  If state.DoString("test()") Then
+    Print state.ToString(-1)
+    Return
+  End
 
   Print "Main: testStruct.foo after call: "+testStruct.foo
   Print "Main: testObject.foo after call: "+testObject.foo
@@ -67,7 +70,7 @@ End
 
 Function PrintTestStruct:Int(L:lua_State Ptr)
   Local state := New LuaState(L)
-  Local test := state.ToObject<TestStruct>(1)
+  Local test := state.ToStruct<TestStruct>(1)
   If test = Null Then
     Print "PrintTestStruct: It was null!"
   Else
@@ -97,7 +100,7 @@ Struct TestStruct
   End
 End
 
-Class TestObject
+Class TestObject Implements LuaObject
   Field foo:String
 
   Method New(foo:String)

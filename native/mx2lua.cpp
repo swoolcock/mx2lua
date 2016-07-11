@@ -211,6 +211,10 @@ float mx2lua_tonumberx(lua_State *L, int index, bool *isnum) {
   return rv;
 }
 
+bbString mx2lua_tostring(lua_State *L, int index) {
+  return bbString(lua_tostring(L, index));
+}
+
 float mx2lua_version(lua_State *L) {
   const lua_Number *ptr = lua_version(L);
   if (ptr != NULL) {

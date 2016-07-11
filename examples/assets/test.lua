@@ -27,4 +27,10 @@ function test()
   PrintTestStruct(testStruct)
   print("Lua: Calling PrintTestObject")
   PrintTestObject(testObject)
+
+  local a = testStruct.foo
+  testStruct.foo = "hello"
+
+  local b = testObject.foo
+  testObject.foo = "world"
 end

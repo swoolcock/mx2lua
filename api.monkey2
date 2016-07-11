@@ -12,10 +12,25 @@ Public
     Return L
   End
 
-  Function NewState:LuaState(openLibs:Bool = True)
-    Local state := New LuaState(luaL_newstate())
-    If openLibs Then state.OpenLibs()
-    Return state
+  Function NewState:LuaState(openLibs:Bool = True, createMetatables:Bool = True)
+    Local L := luaL_newstate()
+    If openLibs Then luaL_openlibs(L)
+    If createMetatables Then
+      luaL_newmetatable(L, "Object")
+      lua_pushcfunction(L, Object_Index)
+      lua_setfield(L, -2, "__index")
+      lua_pushcfunction(L, Object_NewIndex)
+      lua_setfield(L, -2, "__newindex")
+      lua_pop(L, 1)
+
+      luaL_newmetatable(L, "Struct")
+      lua_pushcfunction(L, Struct_Index)
+      lua_setfield(L, -2, "__index")
+      lua_pushcfunction(L, Struct_NewIndex)
+      lua_setfield(L, -2, "__newindex")
+      lua_pop(L, 1)
+    End
+    Return New LuaState(L)
   End
 
   Method New(L:lua_State Ptr)
@@ -369,7 +384,7 @@ Public
   End
 
   Method ToString:String(index:Int)
-    Return ""'lua_tostring(L, index)
+    Return lua_tostring(L, index)
   End
 
   Method ToThread:lua_State Ptr(index:Int)
@@ -585,12 +600,87 @@ Public
   End
 
   Method PushObject<T>:Void(obj:T)
-    PushUserdata(Cast<Void Ptr>(Varptr obj), sizeof(obj))
+    mx2lua_pushuserdata(L, Cast<Void Ptr>(Varptr obj), sizeof(obj))
+    luaL_setmetatable(L, "Object")
+  End
+
+  Method PushStruct<T>:Void(obj:T)
+    mx2lua_pushuserdata(L, Cast<Void Ptr>(Varptr obj), sizeof(obj))
+    luaL_setmetatable(L, "Struct")
   End
 
   Method ToObject<T>:T(index:Int)
-    Local p := Cast<T Ptr>(ToUserdata(index))
+    Local p := Cast<T Ptr>(luaL_checkudata(L, index, "Object"))
     If Not p Then Return Null
     Return p[0]
   End
+
+  Method ToStruct<T>:T(index:Int)
+    Local p := Cast<T Ptr>(luaL_checkudata(L, index, "Struct"))
+    If Not p Then Return Null
+    Return p[0]
+  End
+End
+
+Interface LuaObject
+End
+
+Function Struct_Index:Int(L:lua_State Ptr)
+  Local structPtr := luaL_checkudata(L, 1, "Struct")
+  If structPtr Then
+    Local key := luaL_checkstring(L, 2)
+    ' TODO: get stuff... somehow
+  Else
+    luaL_argerror(L, 1, "nil or not a struct")
+  End
+  lua_pushnil(L)
+  Return 1
+End
+
+Function Struct_NewIndex:Int(L:lua_State Ptr)
+  Local structPtr := luaL_checkudata(L, 1, "Struct")
+  If structPtr Then
+    Local key := luaL_checkstring(L, 2)
+    'Local value := luaL_checkstring(L, 3)
+    ' TODO: set stuff... somehow
+  Else
+    luaL_argerror(L, 1, "nil or not a struct")
+  End
+  Return 0
+End
+
+Function Object_Index:Int(L:lua_State Ptr)
+  Local state := New LuaState(L)
+  Local obj := state.ToObject<Object>(1)
+  If obj Then
+    Local lo := Cast<LuaObject>(obj)
+    If lo Then
+      Local key := state.CheckString(2)
+      ' TODO: get stuff... somehow
+    Else
+      state.ArgError(1, "object doesn't implement LuaObject")
+    End
+  Else
+    state.ArgError(1, "nil or not an object")
+  End
+  state.PushNil()
+  Return 1
+End
+
+Function Object_NewIndex:Int(L:lua_State Ptr)
+  Local state := New LuaState(L)
+  Local obj := state.ToObject<Object>(1)
+  If obj Then
+    Local lo := Cast<LuaObject>(obj)
+    If lo Then
+      Local key := state.CheckString(2)
+      'Local value := state.CheckString(3)
+      ' TODO: set stuff... somehow
+    Else
+      state.ArgError(1, "object doesn't implement LuaObject")
+    End
+  Else
+    state.ArgError(1, "nil or not an object")
+  End
+  Return 0
 End
