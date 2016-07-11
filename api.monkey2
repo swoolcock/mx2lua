@@ -623,6 +623,9 @@ Public
 End
 
 Interface LuaObject
+  Method TypeForFieldName:LuaType(name:String)
+  Method GetField:Void(name:String, target:Void Ptr)
+  Method SetField:Void(name:String, value:Void Ptr)
 End
 
 Function Struct_Index:Int(L:lua_State Ptr)
@@ -656,7 +659,14 @@ Function Object_Index:Int(L:lua_State Ptr)
     Local lo := Cast<LuaObject>(obj)
     If lo Then
       Local key := state.CheckString(2)
-      ' TODO: get stuff... somehow
+      Local type := lo.TypeForFieldName(key)
+      Select type
+        Case LUA_TSTRING
+          Local val:String
+          lo.GetField(key, Varptr val)
+          state.PushString(val)
+          Return 1
+      End
     Else
       state.ArgError(1, "object doesn't implement LuaObject")
     End
@@ -674,8 +684,13 @@ Function Object_NewIndex:Int(L:lua_State Ptr)
     Local lo := Cast<LuaObject>(obj)
     If lo Then
       Local key := state.CheckString(2)
-      'Local value := state.CheckString(3)
-      ' TODO: set stuff... somehow
+      Local type := lo.TypeForFieldName(key)
+      state.CheckType(3, type)
+      Select type
+        Case LUA_TSTRING
+          Local val:String = state.CheckString(3)
+          lo.SetField(key, Varptr val)
+      End
     Else
       state.ArgError(1, "object doesn't implement LuaObject")
     End

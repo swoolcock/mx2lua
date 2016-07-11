@@ -106,4 +106,26 @@ Class TestObject Implements LuaObject
   Method New(foo:String)
     Self.foo = foo
   End
+
+  Method TypeForFieldName:LuaType(name:String)
+    Select name
+      Case "foo"
+        Return LUA_TSTRING
+    End
+    Return LUA_TNONE
+  End
+
+  Method GetField:Void(name:String, target:Void Ptr)
+    Select name
+      Case "foo"
+        Cast<String Ptr>(target)[0] = foo
+    End
+  End
+
+  Method SetField:Void(name:String, value:Void Ptr)
+    Select name
+      Case "foo"
+        foo = Cast<String Ptr>(value)[0]
+    End
+  End
 End

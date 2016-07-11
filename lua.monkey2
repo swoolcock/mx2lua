@@ -70,6 +70,19 @@ Namespace lua
 
 Extern
 
+' consts
+Alias LuaType:Int
+Const LUA_TNONE:LuaType
+Const LUA_TNIL:LuaType
+Const LUA_TBOOLEAN:LuaType
+Const LUA_TLIGHTUSERDATA:LuaType
+Const LUA_TNUMBER:LuaType
+Const LUA_TSTRING:LuaType
+Const LUA_TTABLE:LuaType
+Const LUA_TFUNCTION:LuaType
+Const LUA_TUSERDATA:LuaType
+Const LUA_TTHREAD:LuaType
+
 ' types
 Struct lua_Unsigned
 End
