@@ -27,9 +27,9 @@ SOFTWARE.
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "luadist/src/lua.h"
-#include "luadist/src/lualib.h"
-#include "luadist/src/lauxlib.h"
+#include "lua-5.3.3/src/lua.h"
+#include "lua-5.3.3/src/lualib.h"
+#include "lua-5.3.3/src/lauxlib.h"
 #ifdef __cplusplus
 }
 #endif

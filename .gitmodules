@@ -1,3 +1,0 @@
-[submodule "native/luadist"]
-	path = native/luadist
-	url = git@github.com:LuaDist/lua.git
