@@ -620,12 +620,18 @@ Public
     If Not p Then Return Null
     Return p[0]
   End
+
+  Method PushMethodCall<T>:Void(obj:T, name:String)
+    PushObject<T>(obj)
+    lua_pushstring(L, name)
+    lua_pushcclosure(L, Closure_MethodCall, 2)
+  End
 End
 
 Interface LuaObject
-  Method TypeForFieldName:LuaType(name:String)
-  Method GetField:Void(name:String, target:Void Ptr)
-  Method SetField:Void(name:String, value:Void Ptr)
+  Method __index:Int(L:lua_State Ptr)
+  Method __newindex:Int(L:lua_State Ptr)
+  Method __methodcall:Int(L:lua_State Ptr)
 End
 
 Function Struct_Index:Int(L:lua_State Ptr)
@@ -658,15 +664,7 @@ Function Object_Index:Int(L:lua_State Ptr)
   If obj Then
     Local lo := Cast<LuaObject>(obj)
     If lo Then
-      Local key := state.CheckString(2)
-      Local type := lo.TypeForFieldName(key)
-      Select type
-        Case LUA_TSTRING
-          Local val:String
-          lo.GetField(key, Varptr val)
-          state.PushString(val)
-          Return 1
-      End
+      Return lo.__index(L)
     Else
       state.ArgError(1, "object doesn't implement LuaObject")
     End
@@ -683,14 +681,23 @@ Function Object_NewIndex:Int(L:lua_State Ptr)
   If obj Then
     Local lo := Cast<LuaObject>(obj)
     If lo Then
-      Local key := state.CheckString(2)
-      Local type := lo.TypeForFieldName(key)
-      state.CheckType(3, type)
-      Select type
-        Case LUA_TSTRING
-          Local val:String = state.CheckString(3)
-          lo.SetField(key, Varptr val)
-      End
+      Return lo.__newindex(L)
+    Else
+      state.ArgError(1, "object doesn't implement LuaObject")
+    End
+  Else
+    state.ArgError(1, "nil or not an object")
+  End
+  Return 0
+End
+
+Function Closure_MethodCall:Int(L:lua_State Ptr)
+  Local state := New LuaState(L)
+  Local obj := state.ToObject<Object>(state.UpValueIndex(1))
+  If obj Then
+    Local lo := Cast<LuaObject>(obj)
+    If lo Then
+      Return lo.__methodcall(L)
     Else
       state.ArgError(1, "object doesn't implement LuaObject")
     End

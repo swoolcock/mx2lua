@@ -107,25 +107,28 @@ Class TestObject Implements LuaObject
     Self.foo = foo
   End
 
-  Method TypeForFieldName:LuaType(name:String)
-    Select name
+  Method __index:Int(L:lua_State Ptr)
+		Local state := New LuaState(L)
+		Local name:String = state.CheckString(2)
+		Select name
       Case "foo"
-        Return LUA_TSTRING
+        state.PushString(foo)
+				Return 1
     End
-    Return LUA_TNONE
-  End
+		Return 0
+	End
 
-  Method GetField:Void(name:String, target:Void Ptr)
-    Select name
-      Case "foo"
-        Cast<String Ptr>(target)[0] = foo
-    End
-  End
+  Method __newindex:Int(L:lua_State Ptr)
+		Local state := New LuaState(L)
+		Local name:String = state.CheckString(2)
+		Select name
+			Case "foo"
+				foo = state.CheckString(3)
+		End
+		Return 0
+	End
 
-  Method SetField:Void(name:String, value:Void Ptr)
-    Select name
-      Case "foo"
-        foo = Cast<String Ptr>(value)[0]
-    End
+  Method __methodcall:Int(L:lua_State Ptr)
+    Return 0
   End
 End
