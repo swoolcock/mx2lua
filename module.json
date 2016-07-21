@@ -1,5 +1,8 @@
 {
   "module": "lua",
-  "version": "1.0.0",
+  "about": "MX2 bindings for the Lua 5.3.3 VM (https://www.lua.org/)",
+  "author": "Shane Woolcock",
+  "version": "0.1.0",
+  "support": "https://github.com/swoolcock/mx2lua",
   "depends": ["libc"]
 }
