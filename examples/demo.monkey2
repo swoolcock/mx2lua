@@ -29,12 +29,12 @@ Namespace demo
 #Import "<std>"
 #Import "<mojo>"
 
-#Import "assets/demo.lua"
-
 Using libc..
 Using lua..
 Using std..
 Using mojo..
+
+Const DEMO_FILENAME:String = "modules/lua/examples/assets/demo.lua"
 
 Function Main()
 	New AppInstance
@@ -48,17 +48,18 @@ Class DemoApp Extends Window
 
   Method New()
     state = LuaState.NewState()
-    state.DoString(LoadString("asset::demo.lua"))
+    state.DoFile(DEMO_FILENAME)
   End
 
   Method OnRender(canvas:Canvas) Override
     App.RequestRender()
     If Keyboard.KeyHit(Key.Space) Then
-      Print "reloading"
-      state.DoString(LoadString("asset::demo.lua"))
+      Print "Reloading script..."
+      state.DoFile(DEMO_FILENAME)
     End
     ent.Update(state)
     ent.Draw(canvas)
+		canvas.DrawText("Press Space to reload script", 0, 0)
   End
 End
 
